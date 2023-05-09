@@ -120,7 +120,7 @@ angle = re.search('(?<=Rotate: )\d+', osd)
 script = re.search('(?<=Script: )\d+', osd)
 print("angle: ", angle)
 print("script: ", script)
-'''
+
 #my_conf = r'--oem 3 --psm 6 outputbase digits'
 #my_conf = r'--oem 3 --psm 6'
 #my_conf = r'--psm 4'
@@ -139,24 +139,60 @@ print(res_list_2)
 for i in range(len(res_list_2)):
     print(res_list_2[i])
 
-
+'''
 ###Für mehrere Einstellungen:
 
-configs = [r'--oem 3 --psm 6 outputbase digits', r'--oem 3 --psm 6',r'--psm 4', r"--psm 11 --oem 3"
+configs = [r'--oem 3 --psm 6',r'--psm 4', r"--psm 11 --oem 3"
 ]
 res = []
+res_set = set()
 for con in configs:
 
     # Alle sinnvollen Einstellungen werden durchprobiert
+    print("read")
     res_list = pytesseract.image_to_string(img, config=con)
     # Alle Einträge werden in einzelne snippets unterteilt
+    print("split")
     res_list_2 = res_list.split("\n")
     # Alle leeren Einträge werden entfernt
+    print("blanks")
     while '' in res_list_2:
         res_list_2.remove('')
+    print("isalnum")
+    for i in range(len(res_list_2)):
+        res_set.add(''.join(filter(str.isalnum, res_list_2[i])))
+# Alle Einträge mit weniger als 3 Einträgen werden entferht
+print("charlimit")
+res_set = list(filter(lambda el: len(el) > 3, res_set))
+res_set = list(filter(lambda el: len(el) < 30, res_set))
+print("done")
+res_set = sorted(res_set)
+
+
+
+
+###Für mehrere Einstellungen mit Datenstruktur "SET":
+
+configs = [r'--oem 3 --psm 6',r'--psm 4', r"--psm 11 --oem 3"
+]
+res = set()
+for con in configs:
+
+    # Alle sinnvollen Einstellungen werden durchprobiert
+    print("start")
+    res_list = pytesseract.image_to_string(img, config=con)
+
+    # Alle Einträge werden in einzelne snippets unterteilt
+    res_list_2 = res_list.split("\n")
+    #list to set
+    res_set = set(res_list_2)
+    # Alle leeren Einträge werden entfernt
+    while '' in res_set:
+        res_set.remove('')
     # Alle Einträge mit weniger als 3 Einträgen werden entferht
-    res_list_2 = list(filter(lambda el: len(el) > 3, res_list_2))
-    res.append(res_list_2)
+    res_set = list(filter(lambda el: len(el) > 3, res_set))
+    res.update(res_set)
+
 
 
 '''
