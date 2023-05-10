@@ -1,5 +1,6 @@
 from Regex_name_transformation import regname_1
 import regex as re
+from difflib import SequenceMatcher
 
 data = {
     "SunfireV60x": "lalalalaal",
@@ -15,3 +16,12 @@ def search(name, data):
 
 
 search("CiscoASR9000series", data)
+'''
+def similar(a,b):
+    a = regname_1(a)
+    print(a)
+    b = regname_1(b)
+    return SequenceMatcher(None,a,b).ratio()
+'''
+
+

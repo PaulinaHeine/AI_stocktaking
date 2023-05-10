@@ -18,5 +18,4 @@ def regname_1(name):
         rex.append(splitted[c])
         rex.append(".*")
     rex = "".join(rex)
-
     return rex

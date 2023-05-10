@@ -1,18 +1,20 @@
 
-from Editing_pictures import canny
+from Editing_pictures import canny, get_grayscale
 import pytesseract
 import cv2
+
 pytesseract.pytesseract.tesseract_cmd = r'/usr/local/Cellar/tesseract/5.3.1/bin/tesseract'
 
 
 img = cv2.imread('/Users/paulinaheine/s-l1600.jpg')
 #img = cv2.imread('/Users/paulinaheine/IMG_3120.png')
 #img_canny = canny(img)
-img = cv2.imread("/Users/paulinaheine/Bildschirm­foto 2023-05-10 um 12.26.59.png")
-img_canny = canny(img)
+#img = cv2.imread("/Users/paulinaheine/Bildschirm­foto 2023-05-10 um 12.26.59.png")
+img_grey = get_grayscale(img)
+img_canny = canny(img_grey)
 #plt.imshow(img)
 
-images = [img, img_canny]
+images = [img_canny,img_grey]
 configs = [r'--oem 3 --psm 6',r'--psm 4', r"--psm 11 --oem 3"
 ]
 
@@ -50,5 +52,3 @@ def text_rec(images, configs):
     return res_set
 
 
-
-#(?i).*s.*u.*n.*
