@@ -1,4 +1,6 @@
-
+'''
+Funktionen zum Bearbeiten von Bildern
+'''
 import cv2
 
 # IMAGE IMPROVEMENT

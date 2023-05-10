@@ -7,10 +7,12 @@ pytesseract.pytesseract.tesseract_cmd = r'/usr/local/Cellar/tesseract/5.3.1/bin/
 
 img = cv2.imread('/Users/paulinaheine/s-l1600.jpg')
 #img = cv2.imread('/Users/paulinaheine/IMG_3120.png')
+#img_canny = canny(img)
+img = cv2.imread("/Users/paulinaheine/Bildschirm­foto 2023-05-10 um 12.26.59.png")
 img_canny = canny(img)
 #plt.imshow(img)
 
-images = [img,img_canny]
+images = [img, img_canny]
 configs = [r'--oem 3 --psm 6',r'--psm 4', r"--psm 11 --oem 3"
 ]
 
@@ -49,3 +51,4 @@ def text_rec(images, configs):
 
 
 
+#(?i).*s.*u.*n.*

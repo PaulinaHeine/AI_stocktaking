@@ -1,23 +1,23 @@
-#############
-# Classify pictures from multiple Logos
-#############
+'''
+Supervised Model, das zuordnet zu welcher Marke ein Logo gehört
+'''
 
 
 # Setup
 import tensorflow as tf
-from tensorflow.keras.layers import RNN
+from tensorflow.keras.models import Sequential
 import os
+import cv2
+import imghdr
+import numpy as np
+from matplotlib import pyplot as plt
 
-from sklearn.preprocessing import LabelEncoder
 
 # Avoid OOM errors by setting GPU Memory Consumption Growth
 gpus = tf.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
     tf.config.experimental.set_memory_growth(gpu, True)
 
-# Remove dodgy images
-import cv2
-import imghdr
 
 data_dir = "/Users/paulinaheine/Codes/Vodafone_Inventur/Logos"
 image_exts = ['jpeg', 'jpg', 'bmp', 'png']
@@ -26,7 +26,7 @@ ds_store_file_location = '/Users/paulinaheine/Codes/Vodafone_Inventur/Logos/.DS_
 if os.path.isfile(ds_store_file_location):
     os.remove(ds_store_file_location)
 
-''' Braucht ,man anscheinend nicht
+''' 
 for image_class in os.listdir("/Users/paulinaheine/Codes/Vodafone_Inventur/Logos"):
     os.listdir(os.path.join("/Users/paulinaheine/Codes/Vodafone_Inventur/Logos", image_class))
     ds_store_file_location = os.listdir(os.path.join("/Users/paulinaheine/Codes/Vodafone_Inventur/Logos", image_class,".DS_store"))
@@ -46,10 +46,6 @@ for image_class in os.listdir(data_dir):
         except Exception as e:
             print('Issue with image {}'.format(image_path))
             os.remove(image_path)
-
-# Load data
-import numpy as np
-from matplotlib import pyplot as plt
 
 batch_size = 32
 img_height = 180
@@ -74,7 +70,7 @@ val_ds = tf.keras.utils.image_dataset_from_directory(
 class_names = train_ds.class_names
 print(class_names)
 
-import matplotlib.pyplot as plt
+
 
 '''
 plt.figure(figsize=(10, 10))
@@ -106,59 +102,9 @@ print(np.min(first_image), np.max(first_image))
 
 num_classes = len(class_names)
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
-
-'''
-model = Sequential([
-  tf.keras.layers.Rescaling(1./255, input_shape=(img_height, img_width, 3)),
-  tf.keras.layers.Conv2D(16, 3, padding='same', activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(32, 3, padding='same', activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(64, 3, padding='same', activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dense(num_classes)
-])
-
-model.compile(optimizer='adam',
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-              metrics=['accuracy'])
-model.summary()
-
-epochs=10
-history = model.fit(
-  train_ds,
-  validation_data=val_ds,
-  epochs=epochs
-)
 
 
-acc = history.history['accuracy']
-val_acc = history.history['val_accuracy']
-
-loss = history.history['loss']
-val_loss = history.history['val_loss']
-
-epochs_range = range(epochs)
-
-plt.figure(figsize=(8, 8))
-plt.subplot(1, 2, 1)
-plt.plot(epochs_range, acc, label='Training Accuracy')
-plt.plot(epochs_range, val_acc, label='Validation Accuracy')
-plt.legend(loc='lower right')
-plt.title('Training and Validation Accuracy')
-
-plt.subplot(1, 2, 2)
-plt.plot(epochs_range, loss, label='Training Loss')
-plt.plot(epochs_range, val_loss, label='Validation Loss')
-plt.legend(loc='upper right')
-plt.title('Training and Validation Loss')
-plt.show()
-'''
-
+#Bilder vervielfachen
 data_augmentation = tf.keras.Sequential(
     [
         tf.keras.layers.RandomFlip("horizontal_and_vertical",
@@ -204,10 +150,6 @@ model.compile(optimizer='adam',
 model.summary()
 
 epochs = 25
-
-# Wirkt Overfitting entgegen
-# early_stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', restore_best_weights=True, patience=5, verbose=1)
-# callback = [early_stop]
 
 history = model.fit(
     train_ds,
