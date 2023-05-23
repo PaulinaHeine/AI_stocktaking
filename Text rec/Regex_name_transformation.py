@@ -7,7 +7,7 @@ import regex as re
 digits = {0: ["O","o"], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
 characters = {"a": ["a","o","r"], #A
               "b": ["b","L","R"], #B
-              "c": ["c","L"],
+              "c": ["c","L","e"],
               "d": ["d","l","B","R"],
               "e": ["e","a","r"],
               "f": ["f","R","r","I"],
@@ -65,5 +65,4 @@ def regname_2(name):
     rex = "".join(rex)
     rex = re.compile(rex)
     return rex
-
 
