@@ -5,11 +5,13 @@ Funktion die aus Namen Rexgex slices macht. Z.B.: Sun -> (?i).*s.*u.*n.*
 import regex as re
 
 digits = {0: ["O","o"], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [], 7: [], 8: [], 9: []}
-characters = {"a": ["a","o","r"], #A
+
+def characters():
+    characters = {"a": ["a","o","r"], #A
               "b": ["b","L","R"], #B
               "c": ["c","L","e"],
               "d": ["d","l","B","R"],
-              "e": ["e","a","r"],
+              "e": ["e","a","r","x"],
               "f": ["f","R","r","I"],
               "g": ["g"],
               "h": ["h"],
@@ -28,9 +30,11 @@ characters = {"a": ["a","o","r"], #A
               "u": ["u"],
               "v": ["v"],
               "w": ["w"],
-              "x": ["x"],
+              "x": ["x","e"],
               "y": ["y"],
-              "z": ["z"],}
+              "z": ["z"]}
+
+    return characters
 
 def regname_1(name):
     '''
@@ -46,23 +50,25 @@ def regname_1(name):
     rex = "".join(rex)
     return rex
 
+
 def regname_2(name):
     '''
     Function that returns the devicename in Regex form with multiple possibilities for missclassified caracters
     :param name: Input device name
     :return: device name in regex form as a rexex type
     '''
+    ca = characters()
     rex = ["(?i).*"]
     splitted = re.findall(".", name)
     for c in range(len(splitted)):
-        for i in characters.keys():
+        for i in ca.keys():
             if str(i).upper() == splitted[c].upper():
-                rex.extend(f"{characters[i]}")
+                rex.extend(f"{ca[i]}")
         rex.append(".*")
-
     #for x in range(len(rex)):
     #    rex[x] = "".join(rex[x])
     rex = "".join(rex)
     rex = re.compile(rex)
     return rex
+
 
