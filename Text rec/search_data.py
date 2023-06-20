@@ -6,21 +6,17 @@ dafür gibt es mehrere Algorihtmen:
 -proof_avb(data, p,  res_set ) = Passen die Buchstaben, Rheinfolge egal, überein?  Fehlenden Buchstaben erlaubt je nachdem wieviele fehlen
  '''
 
-from Regex_name_transformation import regname_1, regname_2
+from Text.Regex_name_transformation import regname_1, regname_2
 import regex as re
 from difflib import SequenceMatcher
-from Datenbank import df
-from Text.image_read import text_rec, images, configs
+from Text.Datenbank import read_data
 
+from Text.image_read import text_rec
+'''
 data = {
-    "SunfireV60x": "lalalalaal",
-    "SunfireV65x": "blablablabla",
-    "SparcEnterpriseT2000": "lililililili",
-    "CiscoASR9000Series": "bliblablub",
-    "SunFireX4100": "nananananan",
-    "Cisco":"Fisco",
-    "SunMicrosystems": "Fun"
+XXX
 }
+'''
 
 
 def search(name, data):
@@ -43,7 +39,6 @@ def search(name, data):
                     print(key, data[key])
 
 
-# search("CiscoASR9000series", data)
 
 
 def search_more(name, data):
@@ -65,9 +60,8 @@ def search_more(name, data):
             break
 
 
-#search_more("CiseoASR9000Series", data)
 
-
+data = read_data
 def search_more_loop(names, data):
     '''
     Funktion geht alle geesenen strings durch und sucht nach einem match in der datei auch mis misclassifieds
@@ -98,9 +92,6 @@ def search_more_loop(names, data):
     return y
 
 
-#y = search_more_loop(x, data)
-#y = search_more_loop(names=text_rec(images, configs), data=data)
-
 
 def similarity(name):
     '''
@@ -114,7 +105,7 @@ def similarity(name):
 
 
 
-def proof_avb(data, p,  res_set ):
+def proof_avb(data, p, res_set ):
     '''
 
     :param data: Datenbank in der die devices hinterlegt werden
@@ -135,18 +126,13 @@ def proof_avb(data, p,  res_set ):
                     counter += 1
                     del ref_d[ref_d.index(c)]
                 #print(ref_d)
-            if (counter/len(d)) > p:
-                print(f"Die Wörter {d} und {seq} passen zu { (counter/len(d))*100}% {counter}übereinstimmungen, {perc} =perc")
+            if counter > perc:
+                #xxx% aud d sind in seq enthalten
+                print(f" {d} in {seq} passen zu {(counter/len(d))*100}% {counter}übereinstimmungen, {perc} =perc")
                 result.append(seq)
     #result = [set(result)]
     return result
             #else:
                 #print(f"Die Wörter {d} und {seq} passen zu {(counter/len(d))*100}% {counter}übereinstimmungen")
                 #return False
-
-#proof_avb(data, 0.7, seq= similarity("ASR90cisco00Series"))
-#proof_avb(d, 0.7, seq= similarity("name"))
-
-result = proof_avb(data,0.70,res_set)
-
 
