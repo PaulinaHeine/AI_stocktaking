@@ -1,7 +1,22 @@
+import pandas as pd
+import numpy as np
 
-data =
-{
-"SunfireV60x":"lalalalaal",
-"SunfireV65x":"blablablabla",
-"SparEnterpriseT200":"lililililili",
-"CiscoASR9000Series":"bliblablub"}
+def read_data():
+    df = pd.read_excel(r"CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
+    df = df.drop(df.iloc[:, 25:],axis = 1)
+    df.dropna(subset=['designation'])
+    df.dropna()
+    df = df.fillna("unknown")
+    df_list = df.set_index('designation').T.to_dict("list")
+    df_dict = df.set_index('designation').T.to_dict()
+    df_dict_brand = df.set_index('supplier ').T.to_dict("list")
+    return df_list, df_dict, df_dict_brand
+
+
+data_list, data_dict, data_brand = read_data()
+'''
+for d in df_dict.keys():
+    if type(d) == float:
+        print("float")
+        print(d)
+'''
