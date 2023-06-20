@@ -1,0 +1,71 @@
+'''
+1: Picture Classification
+2: Text rec
+'''
+
+
+from Text.image_read import text_rec, read_picture
+from Pic_class.pic_rec import define_size, pic_rec_model, pic_class, singe_pic_class
+import time
+from Text.search_data import proof_avb, similarity, search, search_more, search_more_loop
+from Text.Regex_name_transformation import regname_1, regname_2, characters
+from Text.Datenbank import read_data
+import warnings
+warnings.filterwarnings("ignore")
+import regex as re
+import os
+import cv2
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+
+# Bild einlesen
+# images,configs = read_picture(r"C:\Users\Paulina.Heine\OneDrive - Vodafone Group\Desktop\Sunfirex4.png")
+
+
+pic = r"C:XXXXX"
+
+model, class_names = pic_rec_model()
+
+
+# liste aus bildern
+def m1(pic, model, class_names):
+    zeitanfang = time.time()
+    pred = pic_class(pic, model, class_names)
+    model_def_time = time.time()
+    print(model_def_time - zeitanfang / 60)
+    # Text rec starten:
+    images, configs = read_picture(pic)
+    # Daten checken
+    if pred in class_names:
+        # Dann nur in der spezifischen Datenbank schauen
+        print("found")
+    else:
+        # ganze Datenbank
+        print("ganz")
+    return model, class_names, pred
+
+
+# model,class_names, pred = m1(pic)
+
+# one picture
+def m1_one(pic, model, class_names):
+    # zeitanfang = time.time()
+    pred = singe_pic_class(pic, model, class_names)
+    # model_def_time = time.time()
+    # print(model_def_time-zeitanfang/60)
+    # Text rec starten:
+    images, configs = read_picture(pic)
+    res_set = text_rec(images, configs)
+    # Daten checken
+    data_list,data_dict, data_brand = read_data()
+    ca = characters()
+    if pred in class_names:
+        print("tobedone: search in classes")
+    else:
+        result = proof_avb(data_list, 0.8, res_set)
+        #devices_img = search_more_loop(result, data_dict)
+
+    return pred, res_set, result
+
+
+pred, res_set, result = m1_one(pic, model, class_names)
