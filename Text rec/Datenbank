@@ -1,22 +1,64 @@
 import pandas as pd
 import numpy as np
 
+
 def read_data():
-    df = pd.read_excel(r"CXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx")
-    df = df.drop(df.iloc[:, 25:],axis = 1)
-    df.dropna(subset=['designation'])
+    df = pd.read_excel(r"C:XXXXXXX")
+    df = df.drop_duplicates(subset='designation')
+    df["name"] = df["supplier "] + df["designation"]
+    df["name"] = df["name"].str.replace(" ", "")
+    df["name"] = df["name"].str.replace("-", "", )
+    df = df.replace(r'[-.,;:_?\/()[]{}= ]', '', regex=True).replace("'", '')
+    col = df.pop('name')
+    df.insert(loc=0, column='name', value=col)
+
+    # df = df.iloc[:100]
+    df = df.drop(df.iloc[:, 25:], axis=1)
+    df.loc[650] = ["SunFireX4100", 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'SunFireX4100', 'unknown', 'unknown']
+    df.loc[651] = ["CiscoASR9000Series", 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'CiscoASR9000Series', 'unknown', 'unknown']
+    df.loc[652] = ["NortelMG1010", 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'NortelMG1010', 'unknown', 'unknown']
+    df.loc[653] = ["RaritanMasterConsoleZ", 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'unknown',
+                   'unknown', 'unknown', 'unknown', 'unknown', 'unknown', 'RaritanMasterConsoleZ', 'unknown', 'unknown']
+    df.dropna(subset=['name'])
     df.dropna()
     df = df.fillna("unknown")
-    df_list = df.set_index('designation').T.to_dict("list")
-    df_dict = df.set_index('designation').T.to_dict()
-    df_dict_brand = df.set_index('supplier ').T.to_dict("list")
-    return df_list, df_dict, df_dict_brand
+
+    u7 = list(filter(lambda el: len(el) < 7, df["name"]))
+    for i in u7:
+        po = df[df["name"] == i].index.tolist()
+        df["name"].loc[po] = "unknown"
+    u5 = list(filter(lambda el: len(el) < 6, df["asset label"]))
+    for i in u5:
+        po = df[df["asset label"] == i].index.tolist()
+        df["asset label"].loc[po] = "unknown"
+    u5 = list(filter(lambda el: len(el) < 4, df["designation"]))
+    for i in u5:
+        po = df[df["designation"] == i].index.tolist()
+        df["designation"].loc[po] = "unknown"
 
 
-data_list, data_dict, data_brand = read_data()
+    #df = df.drop_duplicates(subset='name')
+    data_list = df.set_index('name').T.to_dict("list")
+    df_dict = df.set_index('name').T.to_dict()
+    df_asset_dict = df.set_index('asset label').T.to_dict()
+    df_dict_designation = df.set_index('designation').T.to_dict()
+
+    return data_list, df_dict, df_asset_dict, df_dict_designation
+
+#data_list, data_dict, df_asset_dict,df_dict_designation = read_data()
 '''
 for d in df_dict.keys():
     if type(d) == float:
         print("float")
         print(d)
 '''
+
+# Todo: Bei name oder asset label länge unter 5 muss ein unknown hin
+
